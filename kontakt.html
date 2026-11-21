@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kontakt – Hoffrichter – Baum · Landschaft · Garten</title>
+<meta name="description" content="Kontakt zu Hoffrichter – Baum · Landschaft · Garten in Emmendingen: Anfrage per Formular, Telefon oder E-Mail. Kostenloses Beratungsgespräch.">
+<link rel="icon" type="image/png" href="bilder/logo.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="side" id="side">
+  <a class="logo" href="index.html"><img src="bilder/logo-gelb.png" alt="Hoffrichter – Baum · Landschaft · Garten"></a>
+  <button class="menu-btn" onclick="document.getElementById('side').classList.toggle('open')">Menü</button>
+  <nav>
+    <a href="index.html">Start</a>
+    <a href="ueber-uns.html">Über uns</a>
+    <a href="leistungen.html">Leistungen</a>
+    <a class="active" href="kontakt.html">Kontakt</a>
+  </nav>
+</header>
+<main>
+  <div class="hero small"><h1>Kontakt</h1></div>
+  <section>
+    <h2>Wir freuen uns auf Ihre Anfrage</h2>
+    <p><strong>Hoffrichter – Baum · Landschaft · Garten</strong><br>
+    Elias Hoffrichter, Gärtner<br>
+    79312 Emmendingen<br>
+    Telefon: <a href="tel:+491608386567">+49 160 838 6567</a><br>
+    E-Mail: <a href="mailto:info@hoffrichter-gruen.de">info@hoffrichter-gruen.de</a><br>
+    Instagram: <a href="https://www.instagram.com/hoffrichter.garten" target="_blank" rel="noopener">@hoffrichter.garten</a></p>
+
+    <h3 id="formular">Nachricht senden</h3>
+    <form id="kontaktformular" action="senden.php" method="post" novalidate>
+      <input type="text" name="name" placeholder="Name" autocomplete="name" required>
+      <input type="email" name="email" placeholder="E-Mail" autocomplete="email" required>
+      <input type="tel" name="tel" placeholder="Telefon (optional)" autocomplete="tel">
+      <textarea name="nachricht" placeholder="Ihre Nachricht" required></textarea>
+
+      <!-- Spam-Schutz: Dieses Feld ist für Menschen unsichtbar. Roboter füllen es aus, dann wird die Anfrage verworfen. -->
+      <div class="hp" aria-hidden="true">
+        <label>Bitte leer lassen <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+      </div>
+      <!-- Spam-Schutz: Zeitpunkt des Seitenaufrufs. Zu schnell abgeschickte Formulare erkennt der Server als Roboter. -->
+      <input type="hidden" name="t" value="">
+
+      <label class="check">
+        <input type="checkbox" name="datenschutz" required>
+        <span>Ich habe die <a href="datenschutz.html" target="_blank" rel="noopener">Datenschutzerklärung</a> gelesen und bin damit einverstanden, dass meine Angaben zur Bearbeitung meiner Anfrage verwendet werden.</span>
+      </label>
+
+      <button class="btn" type="submit">Absenden</button>
+      <div id="formstatus" class="form-status" role="status" aria-live="polite" hidden></div>
+    </form>  </section>
+</main>
+<footer>© 2026 Hoffrichter – Baum · Landschaft · Garten · <a href="impressum.html">Impressum</a> | <a href="datenschutz.html">Datenschutz</a></footer>
+<script>
+  // Kommt man über eine Leistungs-Karte, wird die Nachricht vorausgefüllt
+  var l = new URLSearchParams(location.search).get('leistung');
+  var m = document.querySelector('textarea[name="nachricht"]');
+  if (l && m && !m.value) {
+    m.value = l === 'Sonstiges'
+      ? 'Hallo, ich habe eine Anfrage zu folgendem Anliegen: '
+      : 'Hallo, ich interessiere mich für: ' + l + '. ';
+  }
+  // Zum Formular scrollen (der Sprunganker greift wegen der Einblend-Animation nicht zuverlässig)
+  if (location.hash === '#formular') {
+    var goForm = function () {
+      setTimeout(function () {
+        document.getElementById('formular').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 700);
+    };
+    if (document.readyState === 'complete') goForm();
+    else window.addEventListener('load', goForm);
+  }
+
+  // ---- Formular: Prüfung, Absenden, Erfolgs- und Fehlermeldung ----
+  (function () {
+    var form = document.getElementById('kontaktformular');
+    var status = document.getElementById('formstatus');
+    var btn = form.querySelector('button[type="submit"]');
+    form.elements['t'].value = Date.now(); // Spam-Schutz: Zeitstempel
+
+    function show(type, text) {
+      status.className = 'form-status ' + type;
+      status.textContent = text;
+      status.hidden = false;
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      status.hidden = true;
+
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+      // Roboter haben das versteckte Feld ausgefüllt: so tun, als wäre alles gut, aber nichts senden
+      if (form.elements['website'].value) {
+        show('ok', 'Vielen Dank! Ihre Nachricht wurde gesendet.');
+        form.reset();
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Wird gesendet …';
+
+      fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      })
+        .then(function (r) { return r.json().then(function (d) { return { ok: r.ok && d.ok, d: d }; }); })
+        .then(function (res) {
+          if (!res.ok) { throw new Error((res.d && res.d.fehler) || 'Fehler'); }
+          show('ok', 'Vielen Dank! Ihre Nachricht ist bei uns angekommen. Wir melden uns so schnell wie möglich bei Ihnen.');
+          form.reset();
+          form.elements['t'].value = Date.now();
+        })
+        .catch(function () {
+          show('error', 'Leider hat das Senden nicht geklappt. Bitte versuchen Sie es noch einmal oder rufen Sie uns an: +49 160 838 6567.');
+        })
+        .finally(function () {
+          btn.disabled = false;
+          btn.textContent = 'Absenden';
+        });
+    });
+  })();</script>
+</body>
+</html>
