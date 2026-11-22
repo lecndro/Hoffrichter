@@ -34,13 +34,13 @@ body{font-family:"Segoe UI",Helvetica,Arial,sans-serif;color:var(--ink);backgrou
 .logo img{display:block;width:100%;height:auto}
 .logo:hover{transform:scale(1.05)}
 .side nav{display:flex;flex-direction:column;gap:18px;text-align:center}
-.side nav a{position:relative;color:var(--gold);text-decoration:none;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;padding-bottom:4px;opacity:.8;transition:opacity .3s var(--ease),letter-spacing .3s var(--ease)}
-.side nav a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--gold);transform:scaleX(0);transform-origin:center;transition:transform .35s var(--ease)}
+.side nav a{position:relative;color:var(--gold);text-decoration:none;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;padding-bottom:4px;opacity:.8;transition:opacity .5s var(--ease),letter-spacing .5s var(--ease)}
+.side nav a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--gold);transform:scaleX(0);transform-origin:center;transition:transform .55s var(--ease)}
 .side nav a:hover,.side nav a.active{opacity:1;letter-spacing:.16em}
 .side nav a:hover::after,.side nav a.active::after{transform:scaleX(1)}
 /* Der Unterstrich gleitet beim Seitenwechsel von Reiter zu Reiter (Chrome/Edge) */
 .side nav a.active::after{view-transition-name:nav-underline}
-::view-transition-group(nav-underline){animation-duration:.4s;animation-timing-function:var(--ease)}
+::view-transition-group(nav-underline){animation-duration:.7s;animation-timing-function:cubic-bezier(.65,0,.35,1)}
 .menu-btn{display:none}
 
 /* Hero */
