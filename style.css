@@ -49,7 +49,7 @@ body{font-family:"Segoe UI",Helvetica,Arial,sans-serif;color:var(--ink);backgrou
 .hero{border-radius:0 0 var(--r) var(--r)}
 .hero.small{min-height:42vh}
 .hero:not(.small){min-height:68vh}
-.hero h1{color:var(--card);padding:24px 48px;font-weight:400;letter-spacing:.12em;text-transform:uppercase;font-size:clamp(1.3rem,3vw,2.2rem);text-align:center;animation:fade-up .5s var(--ease) .05s both}
+.hero h1{color:var(--gold);padding:24px 48px;font-weight:400;letter-spacing:.12em;text-transform:uppercase;font-size:clamp(1.3rem,3vw,2.2rem);text-align:center;animation:fade-up .5s var(--ease) .05s both}
 
 /* Großes Logo auf der Startseite: ohne Kasten */
 .hero h1.logo-hero{background:none;backdrop-filter:none;padding:0;width:auto}
@@ -161,6 +161,12 @@ details.service[open]::details-content{block-size:auto}
 @media(min-width:720px){
   .about{grid-template-columns:minmax(220px,300px) 1fr;gap:44px}
 }
+/* Startseite: Foto als Hintergrund hinter dem Logo */
+.hero.hero-photo{background:linear-gradient(rgba(18,26,18,.46),rgba(18,26,18,.58)),url("bilder/hero-startseite.jpg") 40% 62%/cover no-repeat #2b332b}
+.hero.hero-photo::before{display:none}
+.hero.hero-photo.hero-kontakt{background-image:linear-gradient(rgba(18,26,18,.46),rgba(18,26,18,.58)),url("bilder/hero-kontakt.jpg");background-position:0 0,50% 45%}
+.hero.hero-photo.hero-ueber-uns{background-image:linear-gradient(rgba(18,26,18,.46),rgba(18,26,18,.58)),url("bilder/hero-ueber-uns.jpg");background-position:0 0,50% 32%}
+.hero.hero-photo.hero-leistungen{background-image:linear-gradient(rgba(18,26,18,.46),rgba(18,26,18,.58)),url("bilder/hero-leistungen.jpg");background-position:0 0,50% 80%}
 /* Rücksicht auf Nutzer, die Animationen abgeschaltet haben */
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
